@@ -18,16 +18,6 @@ return {
    default_cursor_style = 'BlinkingBlock',
    cursor_blink_rate = 650,
 
-   -- vim cursor
-   cursor_styles = {
-      vim_insert = {
-         cursor_style = 'BlinkingBlock',
-      },
-      vim_normal = {
-         cursor_style = 'Block',
-      },
-   },
-
    -- color scheme
    colors = colors,
 
