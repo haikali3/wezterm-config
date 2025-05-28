@@ -17,5 +17,4 @@ return Config:init()
    :append(require('config.domains'))
    :append(require('config.fonts'))
    :append(require('config.general'))
-   :append(require('config.shell'))
    :append(require('config.launch')).options
