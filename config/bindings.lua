@@ -180,11 +180,6 @@ local keys = {
    { key = 'j',     mods = mod.SUPER, action = act.ActivatePaneDirection('Down') },
    { key = 'h',     mods = mod.SUPER, action = act.ActivatePaneDirection('Left') },
    { key = 'l',     mods = mod.SUPER, action = act.ActivatePaneDirection('Right') },
-   {
-      key = 'p',
-      mods = mod.SUPER,
-      action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
-   },
 
    -- panes: scroll pane
    { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },

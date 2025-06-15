@@ -20,13 +20,20 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# -----------------------------------------------------------------------------
+# PostgreSQL PATH exports
+# -----------------------------------------------------------------------------
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+
+# -----------------------------------------------------------------------------
+# Go PATH exports
+# -----------------------------------------------------------------------------
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # Whether to add default bindings (expand on SPACE, expand and accept on ENTER,
 # add CTRL for normal SPACE/ENTER; in incremental search mode expand on CTRL+SPACE)
 # (default true)
-typeset -gi ABBR_DEFAULT_BINDINGS=${ABBR_DEFAULT_BINDINGS:-1}
-# typeset -gi ABBR_DEFAULT_BINDINGS=1
-
+# typeset -gi ABBR_DEFAULT_BINDINGS=${ABBR_DEFAULT_BINDINGS:-1}
 
 # -----------------------------------------------------------------------------
 # Zinit Plugin Manager Installation
@@ -46,6 +53,11 @@ fi
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Enable Zsh completion system
+# -----------------------------------------------------------------------------
+autoload -Uz compinit
+compinit
 
 # -----------------------------------------------------------------------------
 # Zinit Annexes
@@ -86,6 +98,28 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit ice lucid
 zinit light olets/zsh-abbr
 
+# -----------------------------------------------------------------------------
+# Docker & Compose auto-completion via Zinit
+# -----------------------------------------------------------------------------
+# Docker CLI completions
+zinit ice from"gh"   as"program" src"contrib/completion/zsh/_docker"
+zinit light docker/cli
+
+# docker-compose completions
+# zinit ice from"gh"   as"program" src"contrib/completion/zsh/_docker-compose"
+# zinit light docker/cli
+
+# -----------------------------------------------------------------------------
+# Docker & Compose auto-completion via Zinit
+# -----------------------------------------------------------------------------
+# Docker CLI completions
+# zinit ice from"gh" as"completion" pick"contrib/completion/zsh/_docker"
+# zinit load docker/cli
+
+# docker-compose completions
+zinit ice from"gh" as"completion" pick"contrib/completion/zsh/_docker-compose"
+zinit load docker/cli
+
 # Re-bind space to self-insert so abbr can hook it
 # zle -N self-insert _zsh_abbr_self_insert
 # bindkey ' ' self-insert
@@ -97,22 +131,52 @@ zinit light olets/zsh-abbr
 # expand to full commands when you type them followed by a space.
 # -----------------------------------------------------------------------------
 
+# run `abbr list` to see all abbreviations
+# run `abbr erase` to erase all abbreviations
+# run `abbr add -U <alias> <command>` to add an abbreviation
+
 # Git abbreviations
-abbr add -U g='git '                    # Basic git command
-abbr add -U gp='git pull '              # Git pull
-abbr add -U gc='git checkout'           # Git checkout
-abbr add -U gcb='git checkout -b '      # Create and checkout new branch
-abbr add -U gcgp='git checkout main && git pull '  # Switch to main and pull
-abbr add -U gcm='git commit -m '        # Git commit with message
+# abbr add -U g='git '                    # Basic git command
+# abbr add -U gp='git pull '              # Git pull
+# abbr add -U gpush='git push'
+# abbr add -U gpushup='git push --set-upstream origin ' # insert branch name
+# abbr add -U gb='git branch'
+# abbr add -U gs='git status'
+# abbr add -U gc='git checkout'           # Git checkout
+# abbr add -U gcb='git checkout -b '      # Create and checkout new branch
+# abbr add -U gcgp='git checkout main && git pull '  # Switch to main and pull
+# abbr add -U gcm='git commit -m '        # Git commit with message
+
 
 # PNPM abbreviations
-abbr add -U pi='pnpm install '          # Install dependencies
-abbr add -U pid='pnpm install dev '     # Install dev dependencies
-abbr add -U pd='pnpm dev '              # Run dev server
+# abbr add -U p='pnpm '
+# abbr add -U pi='pnpm install '          # Install dependencies
+# abbr add -U pid='pnpm install && pnpm dev '     # Install dev dependencies
+# abbr add -U pd='pnpm dev '              # Run dev server
+# abbr add -U pb='pnpm build'
+
+# Bun abbreviations
+# abbr add -U b='bun '
+# abbr add -U bi='bun install '
+# abbr add -U bid='bun install && bun dev'
+# abbr add -U bd='bun dev '
+# abbr add -U bb='bun build '
+
 
 # Utility abbreviations
-abbr add -U cl='clear'                  # Clear screen
-abbr add -U csr='cursor'                # Open Cursor IDE
+# abbr add -U cl='clear'                  # Clear screen
+# abbr add -U csr='cursor'                # Open Cursor IDE
+
+# Python abbreviations
+# abbr add -U pyt='python3 '               # Python3 command
+# abbr add -U pip='pip3 '                  # Pip3 command
+
+
+# -----------------------------------------------------------------------------
+# Aliases Configuration
+# -----------------------------------------------------------------------------
+# This section contains command aliases for frequently used commands
+# -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
 # Powerlevel10k Configuration
@@ -167,7 +231,10 @@ function vi-jk-escape() {
 zle -N vi-jk-escape
 
 bindkey -M viins 'jk' vi-jk-escape
+# bun completions
+[ -s "/Users/haikaltahar/.bun/_bun" ] && source "/Users/haikaltahar/.bun/_bun"
 
-
-
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
